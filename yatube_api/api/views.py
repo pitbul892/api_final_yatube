@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
@@ -67,15 +68,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, post=self.get_post())
 
 
-class FollowViewSet(viewsets.ReadOnlyModelViewSet):
+class FollowViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                    viewsets.GenericViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('following__username',)
+    pagination_class = None
+    permission_classes = (IsAuthenticated,)
 
-    def list(self, request, *args, **kwargs):
-        if 'limit' and 'offset' not in request.query_params:
-            self.pagination_class = None
-
-        return super().list(request, *args, **kwargs)
+    def get_queryset(self):
+        return Follow.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
