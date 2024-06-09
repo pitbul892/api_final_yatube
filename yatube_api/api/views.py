@@ -1,10 +1,8 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
-
-from posts.models import Comment, Group, Follow, Post, User
+from posts.models import Comment, Group, Follow, Post
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     CommentSerializer,
@@ -12,8 +10,6 @@ from .serializers import (
     FollowSerializer,
     PostSerializer,
 )
-
-# ,
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):

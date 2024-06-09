@@ -1,8 +1,6 @@
 from django.core.exceptions import ValidationError
 from rest_framework import serializers, validators
-
 from rest_framework.relations import SlugRelatedField
-
 
 from posts.models import Comment, Group, Follow, Post, User
 
@@ -31,11 +29,16 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         read_only_fields = ('post', )
 
+
 class FollowSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
-        read_only=True, default=serializers.CurrentUserDefault(), slug_field='username'
+        read_only=True,
+        default=serializers.CurrentUserDefault(),
+        slug_field='username'
     )
-    following = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username'
+    following = serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username'
     )
 
     class Meta:
@@ -56,7 +59,7 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def validate_following(self, data):
         user = self.context['request'].user
-        following = data.get('following')
+        following = data
         if following == user:
             raise ValidationError('Подписка на себя.')
         return super().validate(data)
