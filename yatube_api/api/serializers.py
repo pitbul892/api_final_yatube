@@ -51,15 +51,9 @@ class FollowSerializer(serializers.ModelSerializer):
             )
         ]
 
-    def create(self, data):
-        return Follow.objects.create(
-            user=User.objects.get(username=data['user']),
-            following=User.objects.get(username=data['following'])
-        )
-
     def validate_following(self, data):
         user = self.context['request'].user
         following = data
         if following == user:
             raise ValidationError('Подписка на себя.')
-        return super().validate(data)
+        return data
