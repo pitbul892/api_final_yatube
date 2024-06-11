@@ -2,7 +2,7 @@ from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
-from posts.models import Comment, Group, Follow, Post, User
+from posts.models import Comment, Group, Follow, Post
 from .serializers import (
     CommentSerializer,
     GroupSerializer,
